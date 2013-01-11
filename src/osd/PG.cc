@@ -3141,7 +3141,6 @@ void PG::_scan_list(ScrubMap &map, vector<hobject_t> &ls, bool deep)
         o.digest = h.digest();
         o.digest_present = true;
 
-        //XXX: Should this be run even if osd->store->stat() failed (omap but no data?)
         {
           bufferhash oh;
           bufferlist header;
@@ -3156,8 +3155,7 @@ void PG::_scan_list(ScrubMap &map, vector<hobject_t> &ls, bool deep)
           assert(iter);
           for (iter->seek_to_first(); iter->valid() ; iter->next()) {
             dout(20) << "CRC key " << iter->key() << " value " << iter->value() << dendl;
-            oh << string(iter->key());
-	    oh << iter->value();
+            oh << "'" << string(iter->key()) << "'='" << iter->value() << "'";
           }
 
           o.omap_digest = oh.digest();

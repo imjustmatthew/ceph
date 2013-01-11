@@ -438,10 +438,10 @@ public:
   public:
     hash() : crc(0) { }
 
-    void update(const buffer::list& bl) {
-      crc = ((buffer::list&)bl).crc32c(crc);
+    void update(buffer::list bl) {
+      crc = bl.crc32c(crc);
     }
-    void update(const std::string& str) {
+    void update(std::string str) {
       crc = ceph_crc32c_le(crc, (const unsigned char*)str.c_str(), str.length());
     }
 
@@ -520,12 +520,12 @@ inline std::ostream& operator<<(std::ostream& out, buffer::error& e)
   return out << e.what();
 }
 
-inline bufferhash& operator<<(bufferhash& l, const bufferlist &r) {
+inline bufferhash& operator<<(bufferhash& l, bufferlist r) {
   l.update(r);
   return l;
 }
 
-inline bufferhash& operator<<(bufferhash& l, const std::string& s) {
+inline bufferhash& operator<<(bufferhash& l, std::string s) {
   l.update(s);
   return l;
 }

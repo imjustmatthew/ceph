@@ -2756,16 +2756,7 @@ void ScrubMap::object::decode(bufferlist::iterator& bl)
     if (struct_v >= 4) {
       ::decode(omap_digest, bl);
       ::decode(omap_digest_present, bl);
-    } else {
-      omap_digest = 0;
-      omap_digest_present = false;
     }
-  }
-  else {
-    digest = 0;
-    digest_present = false;
-    omap_digest = 0;
-    omap_digest_present = false;
   }
   DECODE_FINISH(bl);
 }
