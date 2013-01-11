@@ -1584,6 +1584,9 @@ bool PG::queue_scrub()
   if (is_scrubbing()) {
     return false;
   }
+  state_clear(PG_STATE_FORCESCRUB);
+  if (state_test(PG_STATE_FORCEREPAIR))
+    state_set(PG_STATE_REPAIR);
   state_set(PG_STATE_SCRUBBING);
   osd->scrub_wq.queue(this);
   return true;
@@ -2620,7 +2623,12 @@ bool PG::sched_scrub()
 
 void PG::reg_scrub()
 {
+  if (state_test(PG_STATE_FORCESCRUB) ||
+      state_test(PG_STATE_FORCEREPAIR)) {
+    scrub_reg_stamp = utime_t();
+  } else {
     scrub_reg_stamp = info.history.last_scrub_stamp;
+  }
   osd->reg_last_pg_scrub(info.pgid, scrub_reg_stamp);
 }
 
@@ -3748,6 +3756,9 @@ void PG::start_peering_interval(const OSDMapRef lastmap,
   state_clear(PG_STATE_ACTIVE);
   state_clear(PG_STATE_DOWN);
   state_clear(PG_STATE_RECOVERING);
+
+  state_clear(PG_STATE_FORCESCRUB);
+  state_clear(PG_STATE_FORCEREPAIR);
 
   peer_missing.clear();
   peer_purged.clear();

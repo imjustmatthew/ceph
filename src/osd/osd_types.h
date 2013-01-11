@@ -553,6 +553,8 @@ inline ostream& operator<<(ostream& out, const osd_stat_t& s) {
 #define PG_STATE_INCOMPLETE   (1<<16) // incomplete content, peering failed.
 #define PG_STATE_STALE        (1<<17) // our state for this pg is stale, unknown.
 #define PG_STATE_REMAPPED     (1<<18) // pg is explicitly remapped to different OSDs than CRUSH
+#define PG_STATE_FORCESCRUB   (1<<19) // scrub was explicitly requested
+#define PG_STATE_FORCEREPAIR  (1<<20) // repair was explicitly requested
 
 std::string pg_state_string(int state);
 

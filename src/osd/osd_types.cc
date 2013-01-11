@@ -402,6 +402,10 @@ std::string pg_state_string(int state)
     oss << "backfill+";
   if (state & PG_STATE_INCOMPLETE)
     oss << "incomplete+";
+  if (state & PG_STATE_FORCESCRUB)
+    oss << "forcescrub+";
+  if (state & PG_STATE_FORCEREPAIR)
+    oss << "forcerepair+";
   string ret(oss.str());
   if (ret.length() > 0)
     ret.resize(ret.length() - 1);
